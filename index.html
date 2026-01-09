@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Writing Studio – Fun Edition</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root{
+      --bg-main:#0f172a;
+      --bg-card:#0b1220;
+      --accent:#f97316;
+      --accent-soft:#fed7aa;
+      --accent-2:#22c55e;
+      --accent-3:#38bdf8;
+      --text-main:#e5e7eb;
+      --text-muted:#9ca3af;
+      --chip-bg:#1e293b;
+    }
+    *{box-sizing:border-box;}
+    body{
+      font-family:"Inter",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:radial-gradient(circle at top left,#1d4ed8 0,#0f172a 40%,#020617 100%);
+      color:var(--text-main);
+      min-height:100vh;
+      margin:0;
+    }
+    .app-shell{
+      display:flex;
+      min-height:100vh;
+    }
+    .sidebar{
+      width:260px;
+      background:linear-gradient(180deg,#020617,#0b1120);
+      border-right:1px solid rgba(148,163,184,.3);
+      padding:1.25rem 1rem;
+      display:flex;
+      flex-direction:column;
+      gap:1rem;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:.75rem;
+    }
+    .brand-icon{
+      width:40px;height:40px;border-radius:1rem;
+      background:radial-gradient(circle at 30% 30%,#f97316,#22c55e);
+      display:flex;align-items:center;justify-content:center;
+      font-size:1.4rem;
+    }
+    .brand-text-title{font-weight:700;font-size:1.1rem;}
+    .brand-text-sub{font-size:.8rem;color:var(--text-muted);}
+    .nav-section-title{
+      font-size:.75rem;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:var(--text-muted);
+      margin-top:.5rem;
+      margin-bottom:.25rem;
+    }
+    .nav-list{
+      list-style:none;
+      padding:0;margin:0;
+      display:flex;
+      flex-direction:column;
+      gap:.25rem;
+    }
+    .nav-item-btn{
+      border:none;
+      background:transparent;
+      color:var(--text-muted);
+      font-size:.9rem;
+      padding:.45rem .6rem;
+      border-radius:.6rem;
+      display:flex;
+      align-items:center;
+      gap:.5rem;
+      width:100%;
+      text-align:left;
+      transition:all .18s ease-out;
+      cursor:pointer;
+    }
+    .nav-item-btn span.icon{
+      width:24px;height:24px;border-radius:.6rem;
+      background:rgba(148,163,184,.12);
+      display:flex;align-items:center;justify-content:center;
+      font-size:1.1rem;
+    }
+    .nav-item-btn.active{
+      background:linear-gradient(90deg,#f97316,#22c55e);
+      color:#0b1120;
+      font-weight:600;
+      transform:translateX(2px);
+    }
+    .nav-item-btn:hover:not(.active){
+      background:rgba(148,163,184,.15);
+      color:#e5e7eb;
+      transform:translateX(2px);
+    }
+    .nav-footer{
+      margin-top:auto;
+      font-size:.75rem;
+      color:var(--text-muted);
+    }
+    .nav-footer span{
+      display:block;
+    }
+    .main{
+      flex:1;
+      padding:1.25rem 1.5rem;
+      display:flex;
+      flex-direction:column;
+      gap:1rem;
+    }
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:1rem;
+    }
+    .topbar-title{
+      font-size:1.1rem;
+      font-weight:600;
+    }
+    .topbar-sub{
+      font-size:.8rem;
+      color:var(--accent-soft);
+    }
+    .topbar-right{
+      display:flex;
+      align-items:center;
+      gap:.5rem;
+    }
+    .search-input{
+      background:rgba(15,23,42,.9);
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.4);
+      padding:.25rem .75rem;
+      display:flex;
+      align-items:center;
+      gap:.35rem;
+      color:var(--text-muted);
+      font-size:.8rem;
+      min-width:220px;
+    }
+    .search-input input{
+      border:none;
+      background:transparent;
+      outline:none;
+      color:var(--text-main);
+      font-size:.8rem;
+      width:100%;
+    }
+    .chip{
+      font-size:.7rem;
+      padding:.15rem .5rem;
+      border-radius:999px;
+      background:rgba(148,163,184,.2);
+      color:var(--accent-soft);
+    }
+    .btn-theme{
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.5);
+      background:rgba(15,23,42,.9);
+      color:var(--accent-soft);
+      font-size:.8rem;
+      padding:.25rem .7rem;
+    }
+    .content{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      gap:1rem;
+    }
+    .card-fun{
+      background:radial-gradient(circle at top left,#1e293b,#020617);
+      border-radius:1rem;
+      border:1px solid rgba(148,163,184,.35);
+      padding:1rem 1.1rem;
+      box-shadow:0 18px 45px rgba(15,23,42,.6);
+    }
+    .card-soft{
+      background:rgba(15,23,42,.9);
+      border-radius:.9rem;
+      border:1px solid rgba(148,163,184,.35);
+      padding:.9rem 1rem;
+    }
+    .card-soft-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:.35rem;
+    }
+    .card-soft-title{
+      font-size:.9rem;
+      font-weight:600;
+    }
+    .card-soft-sub{
+      font-size:.75rem;
+      color:var(--text-muted);
+    }
+    .pill{
+      font-size:.7rem;
+      padding:.15rem .5rem;
+      border-radius:999px;
+      background:rgba(56,189,248,.15);
+      color:#7dd3fc;
+    }
+    .metric-number{
+      font-size:1.6rem;
+      font-weight:700;
+    }
+    .metric-label{
+      font-size:.75rem;
+      color:var(--text-muted);
+    }
+    .section{
+      display:none;
+      animation:fadeSlide .25s ease-out;
+    }
+    .section.active{
+      display:block;
+    }
+    @keyframes fadeSlide{
+      from{opacity:0;transform:translateY(6px);}
+      to{opacity:1;transform:translateY(0);}
+    }
+    textarea{
+      background:#020617;
+      border-radius:.7rem!important;
+      border:1px solid rgba(148,163,184,.4)!important;
+      color:var(--text-main)!important;
+      font-size:.85rem;
+    }
+    textarea:focus{
+      outline:none;
+      box-shadow:0 0 0 1px var(--accent);
+    }
+    .word-bank span{
+      display:inline-block;
+      background:var(--chip-bg);
+      border-radius:999px;
+      padding:.15rem .55rem;
+      margin:.1rem;
+      font-size:.7rem;
+      cursor:pointer;
+      color:var(--accent-soft);
+    }
+    .word-bank span:hover{
+      background:#1f2937;
+    }
+    .feedback{
+      background:#020617;
+      border-radius:.7rem;
+      border:1px dashed rgba(148,163,184,.6);
+      padding:.5rem .7rem;
+      font-size:.75rem;
+      white-space:pre-wrap;
+      color:var(--accent-soft);
+    }
+    .badge-soft{
+      background:rgba(34,197,94,.15);
+      color:#bbf7d0;
+      border-radius:999px;
+      padding:.15rem .5rem;
+      font-size:.7rem;
+    }
+    .link-list a{
+      color:#7dd3fc;
+      font-size:.8rem;
+      text-decoration:none;
+    }
+    .link-list a:hover{text-decoration:underline;}
+    .salary-pill{
+      background:rgba(248,250,252,.06);
+      border-radius:.7rem;
+      padding:.4rem .6rem;
+      font-size:.75rem;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:.25rem;
+    }
+    .salary-pill span.city{color:var(--accent-soft);}
+    .salary-pill span.range{color:#a5b4fc;}
+    @media(max-width:900px){
+      .app-shell{flex-direction:column;}
+      .sidebar{width:100%;flex-direction:row;overflow-x:auto;}
+      .nav-footer{display:none;}
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">✍️</div>
+      <div>
+        <div class="brand-text-title">AI Writing Studio</div>
+        <div class="brand-text-sub">For future Prompt Engineers</div>
+      </div>
+    </div>
+    <div>
+      <div class="nav-section-title">Workspace</div>
+      <ul class="nav-list">
+        <li><button class="nav-item-btn active" data-section="dashboard"><span class="icon">📊</span>Dashboard</button></li>
+        <li><button class="nav-item-btn" data-section="writing"><span class="icon">📝</span>Writing Practice</button></li>
+        <li><button class="nav-item-btn" data-section="email"><span class="icon">📧</span>Email Builder</button></li>
+        <li><button class="nav-item-btn" data-section="resume"><span class="icon">📄</span>Resume Studio</button></li>
+        <li><button class="nav-item-btn" data-section="tools"><span class="icon">🧰</span>Writing Tools</button></li>
+        <li><button class="nav-item-btn" data-section="challenges"><span class="icon">🔥</span>Daily Challenges</button></li>
+      </ul>
+    </div>
+    <div>
+      <div class="nav-section-title">Grow</div>
+      <ul class="nav-list">
+        <li><button class="nav-item-btn" data-section="articles"><span class="icon">📚</span>AI Articles</button></li>
+        <li><button class="nav-item-btn" data-section="certs"><span class="icon">🎓</span>Certifications</button></li>
+        <li><button class="nav-item-btn" data-section="interview"><span class="icon">🎤</span>Interview Prep</button></li>
+        <li><button class="nav-item-btn" data-section="settings"><span class="icon">⚙️</span>Settings</button></li>
+      </ul>
+    </div>
+    <div class="nav-footer">
+      <span>Master of Education ✅</span>
+      <span>MS Applied AI ✅</span>
+      <span style="margin-top:.25rem;color:#f97316;">Remote Prompt Engineer in progress 🚀</span>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <div class="topbar-title" id="topbarTitle">Dashboard</div>
+        <div class="topbar-sub" id="topbarSub">Track your momentum and jump into focused practice.</div>
+      </div>
+      <div class="topbar-right">
+        <div class="search-input">
+          <span>🔍</span>
+          <input id="globalSearch" placeholder="Search topics, tools, or ideas..." />
+        </div>
+        <span class="chip">Daily writing matters more than perfection.</span>
+      </div>
+    </header>
+
+    <section class="content">
+      <!-- DASHBOARD -->
+      <div class="section active" id="section-dashboard">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <div class="card-fun">
+              <div class="card-soft-header">
+                <div>
+                  <div class="card-soft-title">Daily Streak 🔥</div>
+                  <div class="card-soft-sub">Write something—anything—every day.</div>
+                </div>
+                <span class="pill" id="streakBadge">0 days</span>
+              </div>
+              <div class="metric-number" id="streakNumber">0</div>
+              <div class="metric-label" id="streakMessage">Start your first streak today.</div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card-fun">
+              <div class="card-soft-header">
+                <div>
+                  <div class="card-soft-title">Weekly Word Count ✍️</div>
+                  <div class="card-soft-sub">Across all practice sessions.</div>
+                </div>
+                <span class="pill">Goal: 2,000+</span>
+              </div>
+              <div class="metric-number" id="weeklyWords">0</div>
+              <div class="metric-label" id="weeklyWordsMessage">You haven’t logged words yet this week.</div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card-fun">
+              <div class="card-soft-header">
+                <div>
+                  <div class="card-soft-title">Prompts Completed ✅</div>
+                  <div class="card-soft-sub">Each one sharpens your voice.</div>
+                </div>
+                <span class="pill" id="promptsBadge">0</span>
+              </div>
+              <div class="metric-number" id="promptsCompleted">0</div>
+              <div class="metric-label">Aim for 3–5 prompts per week.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-3 mt-1">
+          <div class="col-lg-8">
+            <div class="card-fun">
+              <div class="card-soft-header">
+                <div class="card-soft-title">Recent Challenges</div>
+                <span class="badge-soft">Saved prompts</span>
+              </div>
+              <div id="recentChallenges" class="card-soft-sub">
+                No challenges saved yet. Visit “Daily Challenges” and save a few that excite you.
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="card-fun mb-2">
+              <div class="card-soft-header">
+                <div class="card-soft-title">Quick Launch</div>
+              </div>
+              <div class="d-grid gap-2 mt-2">
+                <button class="btn btn-sm btn-warning" onclick="goToSection('writing')">Start a Writing Prompt</button>
+                <button class="btn btn-sm btn-outline-light" onclick="goToSection('email')">Draft a Professional Email</button>
+                <button class="btn btn-sm btn-outline-light" onclick="goToSection('resume')">Refine Your Resume</button>
+              </div>
+            </div>
+            <div class="card-fun">
+              <div class="card-soft-header">
+                <div class="card-soft-title">Today’s Nudge 💡</div>
+              </div>
+              <div class="card-soft-sub" id="nudgeText">
+                Write 150–200 words explaining why your company should invest in an internal LLM assistant for employees.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WRITING PRACTICE -->
+      <div class="section" id="section-writing">
+        <div class="row g-3">
+          <div class="col-lg-7">
+            <div class="card-fun">
+              <div class="card-soft-header">
+                <div>
+                  <div class="card-soft-title">Prompt: Internal LLM Assistant</div>
+                  <div class="card-soft-sub">Audience: engineering leaders + non-technical executives.</div>
+                </div>
+                <span class="pill">Product thinking</span>
+              </div>
+              <p class="card-soft-sub">
+                Write a one-page product overview that explains the assistant’s purpose, target users, core capabilities, and success metrics.
+              </p>
+              <div class="word-bank mb-2">
+                <span onclick="insertWord('p1_text','operational efficiency')">operational efficiency</span>
+                <span onclick="insertWord('p1_text','knowledge retrieval')">knowledge retrieval</span>
+                <span onclick="insertWord('p1_text','context-aware')">context-aware</span>
+                <span onclick="insertWord('p1_text','guardrails')">guardrails</span>
+                <span onclick="insertWord('p1_text','hallucination mitigation')">hallucination mitigation</span>
+                <span onclick="insertWord('p1_text','role-based access control')">role-based access control</span>
+                <span onclick="insertWord('p1_text','governance')">governance</span>
+                <span onclick="insertWord('p1_text','observability')">observability</span>
+                <span onclick="insertWord('p1_text','user adoption')">user adoption</span>
+                <span onclick="insertWord('p1_text','time-to-value')">time-to-value</span>
+              </div>
+              <textarea id="p1_text" rows="7" placeholder="Draft your product overview here..."></textarea>
+              <div class="d-flex gap-2 mt-2">
+                <button class="btn btn-sm btn-warning" onclick="analyzeWriting('p1_text','p1_feedback',true)">Analyze My Writing</button>
+                <button class="btn btn-sm btn-outline-light" onclick="rewriteText('p1_text','p1_feedback','executive')">Executive Tone Hint</button>
+                <button class="btn btn-sm btn-outline-light" onclick="incrementPrompt()">Mark Prompt Complete</button>
+              </div>
+              <div id="p1_feedback" class="feedback mt-2"></div>
+            </div>
+          </div>
+          <div class="col-lg-5">
+            <div class="card-fun mb-2">
+              <div class="card-soft-header">
+                <div class="card-soft-title">Mini Example Paragraph</div>
+                <span class="pill">Model</span>
+              </div>
+              <div class="card-soft-sub">
+                The proposed assistant is a context-aware, enterprise-grade LLM interface that streamlines knowledge retrieval for both technical and non-technical employees. By integrating with systems of record—such as ticketing, code repositories, and policy documentation—the assistant reduces time-to-value for common workflows like incident triage and onboarding. Guardrails, including role-based access control and hallucination mitigation strategies, ensure that responses remain accurate, auditable, and aligned with internal governance standards.
+              </div>
+            </div>
+            <div class="card-fun">
+              <div class="card-soft-header">
+                <div class="card-soft-title">Essay Organization Template</div>
+                <span class="pill">Structure</span>
+              </div>
+              <div class="card-soft-sub">
+                <strong>1. Opening (Thesis)</strong><br>
+                State the core idea in one or two sentences. Example: “This memo proposes an internal LLM assistant to reduce time-to-resolution for support tickets and accelerate onboarding.”<br><br>
+                <strong>2. Context</strong><br>
+                Briefly describe the current pain points or opportunity. Keep it concrete and measurable.<br><br>
+                <strong>3. Pillars (2–4 sections)</strong><br>
+                Each pillar covers one dimension: capabilities, users, risks, metrics, etc. Use topic sentences and supporting details.<br><br>
+                <strong>4. Recommendation</strong><br>
+                Close with a clear ask or next step. Example: “I recommend a 6-week pilot with two teams and a defined evaluation plan.”
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EMAIL BUILDER -->
+      <div class="section" id="section-email">
+        <div class="row g-3">
+          <div class="col-lg-5">
+            <div class="card-fun">
+              <div class="card-soft-header">
+                <div class="card-soft-title">Email Settings</div>
+                <span class="pill">Remote Prompt Roles</span>
+              </div>
+              <div class="card-soft-sub mb-2">Generate a polished email, then tweak it to sound like you.</div>
+              <div class="mb-2">
+                <label class="card-soft-sub">Email Type</label>
+                <select id="emailType" class="form-select form-select-sm bg-dark text-light border-secondary" onchange="updateEmailTemplate()">
+                  <option value="intro">Intro to Hiring Manager (Prompt Engineer)</option>
+                  <option value="followup">Post-Interview Follow-Up</option>
+                  <option value="network">Networking / Informational Chat</option>
+                </select>
+              </div>
+              <div class="mb-2">
+                <label class="card-soft-sub">Tone</label>
+                <select id="emailTone" class="form-select form-select-sm bg-dark text-light border-secondary" onchange="updateEmailTemplate()">
+                  <option value="professional">Professional</option>
+                  <option value="executive">Executive</option>
+                  <option value="warm">Warm</option>
+                </select>
+              </div>
+              <div class="mb-2">
+                <label class="card-soft-sub">Subject</label>
+                <input id="emailSubject" class="form-control form-control-sm bg-dark text-light border-secondary" />
+              </div>
+              <div class="mb-2">
+                <label class="card-soft-sub">Greeting</label>
+                <input id="emailGreeting" class="form-control form-control-sm bg-dark text-light border-secondary" value="Hi [Name]," />
+              </div>
+              <div class="mb-2">
+                <label class="card-soft-sub">Signature</label>
+                <textarea id="emailSignature" rows="2" class="form-control form-control-sm bg-dark text-light border-secondary">Best regards,
+[Your Name]</textarea>
+              </div>
+              <button class="btn btn-sm btn-warning" onclick="updateEmailTemplate()">Generate Email</button>
+            </div>
+          </div>
+          <div class="col-lg-7">
+            <div class="card-fun mb-2">
+              <div class="card-soft-header">
+                <div class="card-soft-title">Email Preview</div>
+                <button class="btn btn-sm btn-outline-light" onclick="copyEmail()">Copy</button>
+              </div>
+              <div class="card-soft-sub mb-2">Paste this into your email client and personalize details.</div>
+              <div id="emailPreview" class="feedback" style="min-height:150px;">Select a template and click “Generate Email”.</div>
+            </div>
+            <div class="card-fun">
+              <div class="card-soft-header">
+                <div class="card-soft-title">Tone & Clarity Check</div>
+              </div>
+              <button class="btn btn-sm btn-outline-light mb-2" onclick="analyzeEmail()">Analyze Email</button>
+              <div id="emailFeedback" class="feedback"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RESUME -->
+      <div class="section" id="section-resume">
+        <div class="row g-3">
+          <div class="col-lg-5">
+            <div class="card-fun">
+              <div class="card-soft-header">
+                <div class="card-soft-title">Resume Role & Level</div>
+                <span class="pill">AI Career</span>
+              </div>
+              <div class="mb-2">
+                <label class="card-soft-sub">Target Role</label>
+                <select id="resumeRole" class="form-select form-select-sm bg-dark text-light border-secondary" onchange="updateResumeTemplate()">
+                  <option value="prompt">Remote AI Prompt Engineer</option>
+                  <option value="ml">Machine Learning Engineer</option>
+                  <option value="ai">AI Engineer (Generalist)</option>
+                </select>
+              </div>
+              <div class="mb-2">
+                <label class="card-soft-sub">Experience Level</label>
+                <select id="resumeLevel" class="form-select form-select-sm bg-dark text-light border-secondary" onchange="updateResumeTemplate()">
+                  <option value="mid">Mid-level</option>
+                  <option value="senior">Senior</option>
+                </select>
+              </div>
+              <div class="card-soft-sub">
+                Use the pattern <strong>Action + Context + Impact</strong> for each bullet. Example: “Designed prompt evaluation framework that reduced hallucination rate by 23% across 3 features.”
+              </div>
+            </div>
+            <div class="card-fun mt-2">
+              <div class="card-soft-header">
+                <div class="card-soft-title">Salary Snapshot 💵</div>
+              </div>
+              <div class="card-soft-sub mb-2">Approximate ranges (very rough, total comp varies):</div>
+              <div class="salary-pill"><span class="city">Prompt Engineer – Nashville</span><span class="range">$110k–$150k</span></div>
+              <div class="salary-pill"><span class="city">Prompt Engineer – Dallas</span><span class="range">$120k–$170k</span></div>
+              <div class="salary-pill"><span class="city">ML Engineer – Atlanta</span><span class="range">$120k–$180k</span></div>
+              <div class="salary-pill"><span class="city">AI Engineer – Cincinnati</span><span class="range">$110k–$160k</span></div>
+              <div class="card-soft-sub mt-1">Use these as directional signals, not guarantees.</div>
+            </div>
+          </div>
+          <div class="col-lg-7">
+            <div class="card-fun">
+              <div class="card-soft-header">
+                <div class="card-soft-title">Resume Preview</div>
+              </div>
+              <div id="resumePreview" class="feedback" style="min-height:200px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOOLS -->
+      <div class="section" id="section-tools">
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <div class="card-fun mb-2">
+              <div class="card-soft-header">
+                <div class="card-soft-title">Reading Level Estimator 📚</div>
+              </div>
+              <textarea id="read_text" rows="5" placeholder="Paste text to estimate reading level..."></textarea>
+              <button class="btn btn-sm btn-warning mt-2" onclick="estimateReading()">Estimate</button>
+              <div id="read_feedback" class="feedback mt-2"></div>
+            </div>
+            <div class="card-fun">
+              <div class="card-soft-header">
+                <div class="card-soft-title">Writing Sprint Timer ⏱️</div>
+              </div>
+              <button class="btn btn-sm btn-outline-light mb-2" onclick="startTimer()">Start 10-minute Sprint</button>
+              <div id="timer_display" class="feedback"></div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card-fun mb-2">
+              <div class="card-soft-header">
+                <div class="card-soft-title">Tone Rewriter (Guided) 🎨</div>
+              </div>
+              <textarea id="tone_text" rows="5" placeholder="Paste text to get tone guidance..."></textarea>
+              <div class="d-flex gap-2 mt-2">
+                <select id="tone_style" class="form-select form-select-sm bg-dark text-light border-secondary">
+                  <option value="formal">Formal</option>
+                  <option value="executive">Executive</option>
+                  <option value="concise">Concise</option>
+                  <option value="technical">Technical</option>
+                  <option value="persuasive">Persuasive</option>
+                  <option value="plain">Plain-language</option>
+                  <option value="senior">Senior AI Engineer</option>
+                </select>
+                <button class="btn btn-sm btn-warning" onclick="rewriteTone()">Show Tone Checklist</button>
+              </div>
+              <div id="tone_feedback" class="feedback mt-2"></div>
+            </div>
+            <div class="card-fun">
+              <div class="card-soft-header">
+                <div class="card-soft-title">Export Text (Simple) 📄</div>
+              </div>
+              <textarea id="pdf_text" rows="4" placeholder="Paste text to export as a simple file..."></textarea>
+              <button class="btn btn-sm btn-outline-light mt-2" onclick="exportTextPDF('pdf_text')">Download as .txt-like file</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHALLENGES -->
+      <div class="section" id="section-challenges">
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <div class="card-fun">
+              <div class="card-soft-header">
+                <div class="card-soft-title">Daily Writing Challenge 🎯</div>
+              </div>
+              <div class="mb-2">
+                <label class="card-soft-sub">Category</label>
+                <select id="challengeCategory" class="form-select form-select-sm bg-dark text-light border-secondary" onchange="generateChallenge()">
+                  <option value="ai">AI Engineering</option>
+                  <option value="ml">Machine Learning</option>
+                  <option value="ethics">Ethics & Governance</option>
+                  <option value="comm">Technical Communication</option>
+                  <option value="product">Product Thinking</option>
+                  <option value="leadership">Leadership</option>
+                  <option value="education">Education + AI</option>
+                </select>
+              </div>
+              <div id="challengeCard" class="feedback" style="min-height:120px;">Click “Generate Challenge” to get started.</div>
+              <div class="d-flex gap-2 mt-2">
+                <button class="btn btn-sm btn-warning" onclick="generateChallenge()">Generate Challenge</button>
+                <button class="btn btn-sm btn-outline-light" onclick="saveChallenge()">Save to Dashboard</button>
+              </div>
+              <div id="challengeStatus" class="card-soft-sub mt-1"></div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card-fun">
+              <div class="card-soft-header">
+                <div class="card-soft-title">Saved Challenges</div>
+              </div>
+              <div id="savedChallenges" class="card-soft-sub">No challenges saved yet.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ARTICLES -->
+      <div class="section" id="section-articles">
+        <div class="card-fun">
+          <div class="card-soft-header">
+            <div class="card-soft-title">AI Articles Library 📚</div>
+            <span class="pill">Deepen your thinking</span>
+          </div>
+          <div class="row g-3 mt-1 link-list">
+            <div class="col-md-4">
+              <div class="card-soft-sub mb-1"><strong>Foundational AI & ML</strong></div>
+              <ul class="card-soft-sub">
+                <li><a href="https://www.deeplearning.ai/the-batch/" target="_blank">The Batch – DeepLearning.AI</a></li>
+                <li><a href="https://openai.com/research" target="_blank">OpenAI Research blog</a></li>
+                <li><a href="https://ai.googleblog.com/" target="_blank">Google AI Blog</a></li>
+                <li><a href="https://www.deepmind.com/research" target="_blank">DeepMind research</a></li>
+                <li><a href="https://aws.amazon.com/blogs/machine-learning/" target="_blank">AWS ML Blog</a></li>
+              </ul>
+            </div>
+            <div class="col-md-4">
+              <div class="card-soft-sub mb-1"><strong>LLMs & Prompt Engineering</strong></div>
+              <ul class="card-soft-sub">
+                <li><a href="https://platform.openai.com/docs/guides/prompt-engineering" target="_blank">OpenAI Prompt Engineering Guide</a></li>
+                <li><a href="https://www.promptingguide.ai/" target="_blank">Prompting Guide</a></li>
+                <li><a href="https://lilianweng.github.io/posts/2023-03-15-prompt-engineering/" target="_blank">Lilian Weng – Prompt Engineering</a></li>
+                <li><a href="https://arxiv.org/abs/2401.18058" target="_blank">Prompt Engineering: A Survey</a></li>
+                <li><a href="https://huggingface.co/blog" target="_blank">Hugging Face Blog</a></li>
+              </ul>
+            </div>
+            <div class="col-md-4">
+              <div class="card-soft-sub mb-1"><strong>Responsible AI & MLOps</strong></div>
+              <ul class="card-soft-sub">
+                <li><a href="https://ai.google/responsibility/" target="_blank">Google – Responsible AI</a></li>
+                <li><a href="https://www.microsoft.com/en-us/ai/responsible-ai" target="_blank">Microsoft – Responsible AI</a></li>
+                <li><a href="https://evidentlyai.com/blog" target="_blank">Evidently AI – Monitoring</a></li>
+                <li><a href="https://ml-ops.org/" target="_blank">MLOps Community</a></li>
+                <li><a href="https://distill.pub/" target="_blank">Distill</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CERTIFICATIONS -->
+      <div class="section" id="section-certs">
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <div class="card-fun">
+              <div class="card-soft-header">
+                <div class="card-soft-title">AI / ML & GenAI</div>
+              </div>
+              <ul class="card-soft-sub">
+                <li><a href="https://www.deeplearning.ai/courses/" target="_blank">DeepLearning.AI specializations</a></li>
+                <li><a href="https://www.coursera.org/specializations/machine-learning-introduction" target="_blank">Coursera – ML Specializations</a></li>
+                <li><a href="https://www.coursera.org/specializations/generative-ai" target="_blank">Coursera – Generative AI</a></li>
+                <li><a href="https://www.udacity.com/school-of-ai" target="_blank">Udacity – School of AI</a></li>
+                <li><a href="https://www.datacamp.com/tracks/machine-learning-scientist" target="_blank">DataCamp – ML Scientist</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card-fun mb-2">
+              <div class="card-soft-header">
+                <div class="card-soft-title">Cloud & Production</div>
+              </div>
+              <ul class="card-soft-sub">
+                <li><a href="https://aws.amazon.com/certification/certified-machine-learning-specialty/" target="_blank">AWS ML Specialty</a></li>
+                <li><a href="https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-engineer/" target="_blank">Azure AI Engineer Associate</a></li>
+                <li><a href="https://cloud.google.com/certification/machine-learning-engineer" target="_blank">GCP ML Engineer</a></li>
+                <li><a href="https://www.hashicorp.com/certification" target="_blank">HashiCorp certifications</a></li>
+                <li><a href="https://kubernetes.io/training/" target="_blank">Kubernetes training</a></li>
+              </ul>
+            </div>
+            <div class="card-fun">
+              <div class="card-soft-header">
+                <div class="card-soft-title">How to Position Them</div>
+              </div>
+              <div class="card-soft-sub">
+                Pair each certification with a concrete project: “Azure AI Engineer – built an internal LLM assistant for onboarding that reduced time-to-first-productive-task by 30%.”<br><br>
+                For you, emphasize: <strong>applied AI + education + communication</strong>. That combination is rare and powerful for Prompt Engineer roles.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- INTERVIEW -->
+      <div class="section" id="section-interview">
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <div class="card-fun">
+              <div class="card-soft-header">
+                <div class="card-soft-title">Sample Questions & Model Answers 🎤</div>
+              </div>
+              <div class="card-soft-sub mb-2"><strong>1. How do you approach prompt engineering for a new use case?</strong></div>
+              <div class="card-soft-sub mb-3">
+                I start by clarifying the user journey and the decision the model is supposed to support. From there, I design a small set of candidate prompts that vary along a few dimensions—level of instruction, examples, and constraints—and I evaluate them against a representative dataset. I track both quantitative metrics, such as task success rate and hallucination frequency, and qualitative feedback from domain experts. Once we converge on a baseline, I formalize a prompt library, add automated regression tests, and document failure modes so that future iterations are systematic rather than ad hoc.
+              </div>
+              <div class="card-soft-sub mb-2"><strong>2. How would you measure success in your first 90 days?</strong></div>
+              <div class="card-soft-sub">
+                I’d aim to deeply understand the product domain, ship at least one prompt or evaluation improvement into production, and contribute to shared documentation. Success metrics could include reduction in escalation tickets related to AI features, improved task success rates on key flows, and positive feedback from partner teams. For a remote role, I’d also look at communication indicators—clear async updates, well-structured design docs, and proactive collaboration with PMs and engineers.
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card-fun mb-2">
+              <div class="card-soft-header">
+                <div class="card-soft-title">Practice Your Answer</div>
+              </div>
+              <textarea id="interview_text" rows="6" placeholder="Draft your response here..."></textarea>
+              <div class="d-flex gap-2 mt-2">
+                <button class="btn btn-sm btn-warning" onclick="analyzeWriting('interview_text','interview_feedback',false)">Analyze</button>
+                <button class="btn btn-sm btn-outline-light" onclick="rewriteText('interview_text','interview_feedback','executive')">Executive Tone Hint</button>
+              </div>
+              <div id="interview_feedback" class="feedback mt-2"></div>
+            </div>
+            <div class="card-fun">
+              <div class="card-soft-header">
+                <div class="card-soft-title">Targeting Remote Prompt Engineer Roles</div>
+              </div>
+              <div class="card-soft-sub">
+                • Frame your M.Ed as expertise in learning, behavior, and communication.<br>
+                • Frame your M.S. in Applied AI as your technical engine for LLMs and ML systems.<br>
+                • Build 3–5 flagship projects: internal assistants, learning tools, knowledge bases, evaluation frameworks.<br>
+                • Emphasize async communication: clear docs, structured updates, and thoughtful written decisions.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="section" id="section-settings">
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <div class="card-fun">
+              <div class="card-soft-header">
+                <div class="card-soft-title">Writing Goals 🎯</div>
+              </div>
+              <div class="mb-2">
+                <label class="card-soft-sub">Weekly Word Goal</label>
+                <input id="goalWords" type="number" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="e.g., 2000" />
+              </div>
+              <div class="mb-2">
+                <label class="card-soft-sub">Prompts per Week</label>
+                <input id="goalPrompts" type="number" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="e.g., 5" />
+              </div>
+              <button class="btn btn-sm btn-warning" onclick="saveGoals()">Save Goals</button>
+              <div id="goalStatus" class="card-soft-sub mt-1"></div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card-fun">
+              <div class="card-soft-header">
+                <div class="card-soft-title">Reset Progress</div>
+              </div>
+              <div class="card-soft-sub mb-2">
+                This clears streak, word counts, and saved challenges from this browser only.
+              </div>
+              <button class="btn btn-sm btn-outline-light" onclick="resetProgress()">Reset All Progress</button>
+              <div id="resetStatus" class="card-soft-sub mt-1"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // SECTION NAVIGATION
+  const sectionMap={
+    dashboard:{title:"Dashboard",sub:"Track your momentum and jump into focused practice."},
+    writing:{title:"Writing Practice",sub:"Deepen your professional voice with targeted prompts."},
+    email:{title:"Email Builder",sub:"Craft concise, executive-ready emails for AI roles."},
+    resume:{title:"Resume Studio",sub:"Shape a resume that speaks to AI & ML roles."},
+    tools:{title:"Writing Tools",sub:"Refine tone, clarity, and structure."},
+    challenges:{title:"Daily Challenges",sub:"Generate prompts that stretch your thinking."},
+    articles:{title:"AI Articles",sub:"Feed your brain with high-quality AI content."},
+    certs:{title:"Certifications",sub:"Signal depth in AI, ML, and cloud."},
+    interview:{title:"Interview Prep",sub:"Practice responses for remote Prompt Engineer roles."},
+    settings:{title:"Settings",sub:"Customize your writing environment and goals."}
+  };
+  function goToSection(key){
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById('section-'+key).classList.add('active');
+    document.querySelectorAll('.nav-item-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.nav-item-btn').forEach(b=>{
+      if(b.getAttribute('data-section')===key)b.classList.add('active');
+    });
+    document.getElementById('topbarTitle').textContent=sectionMap[key].title;
+    document.getElementById('topbarSub').textContent=sectionMap[key].sub;
+  }
+  document.querySelectorAll('.nav-item-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>goToSection(btn.getAttribute('data-section')));
+  });
+
+  // SIMPLE SEARCH (just a playful helper)
+  document.getElementById('globalSearch').addEventListener('keydown',e=>{
+    if(e.key==='Enter'){
+      const q=e.target.value.trim();
+      if(!q)return;
+      alert("Use this as a nudge: look for opportunities to write about “"+q+"” in your prompts, emails, or resume.");
+    }
+  });
+
+  // WORD INSERT
+  function insertWord(textareaId,word){
+    const ta=document.getElementById(textareaId);if(!ta)return;
+    const start=ta.selectionStart||ta.value.length;
+    const end=ta.selectionEnd||ta.value.length;
+    const before=ta.value.substring(0,start);
+    const after=ta.value.substring(end);
+    ta.value=before+(before.endsWith(' ')?'':' ')+word+' '+after;
+    ta.focus();
+  }
+
+  // ANALYZER
+  function analyzeWriting(textId,feedbackId,logWords){
+    const ta=document.getElementById(textId),fb=document.getElementById(feedbackId);
+    if(!ta||!fb)return;
+    const text=ta.value.trim();
+    if(!text){fb.textContent='Write a draft first, then analyze.';return;}
+    const words=text.split(/\s+/).filter(w=>w).length;
+    const sentences=text.split(/[.!?]+/).filter(s=>s.trim().length>0);
+    const avg=sentences.length?words/sentences.length:words;
+    const informal=["stuff","things","a lot","kinda","sort of","really","very","cool","awesome"];
+    const found=informal.filter(w=>text.toLowerCase().includes(w));
+    let toneHint=found.length>0?"Tone includes informal language ("+found.join(", ")+"). Consider more precise wording.":"Tone appears mostly professional. You can still tighten phrasing by removing filler.";
+    let lengthHint=words<150?"Relatively short ("+words+" words). For essays, aim for 200–400 words unless brevity is required.":words>600?"Quite long ("+words+" words). Consider tightening to highlight your main pillars.":"Length ("+words+" words) is reasonable for a focused professional response.";
+    let sentenceHint=avg>28?"Average sentence length is "+avg.toFixed(1)+" words; some sentences may be hard to follow.":"Average sentence length is "+avg.toFixed(1)+" words, which is generally readable.";
+    const longSentences=sentences.filter(s=>s.split(/\s+/).length>30).length;
+    if(longSentences>0)sentenceHint+=" You have "+longSentences+" very long sentence(s); consider splitting them.";
+    fb.textContent="Word count: "+words+"\nSentences: "+sentences.length+"\nAverage sentence length: "+avg.toFixed(1)+"\n\n"+toneHint+"\n"+lengthHint+"\n"+sentenceHint+"\n\nCheck structure: clear thesis, 2–4 body pillars, and a concrete recommendation or next step.";
+    if(logWords){
+      const current=parseInt(localStorage.getItem('weeklyWords')||'0',10);
+      localStorage.setItem('weeklyWords',current+words);
+      updateDashboard();
+    }
+  }
+
+  function estimateReading(){
+    const text=document.getElementById('read_text').value.trim();
+    const fb=document.getElementById('read_feedback');
+    if(!text){fb.textContent='Paste text first.';return;}
+    const words=text.split(/\s+/).length;
+    const sentences=text.split(/[.!?]+/).filter(s=>s.trim().length>0).length||1;
+    const syllables=(text.toLowerCase().match(/[aeiouy]+/g)||[]).length||1;
+    const grade=0.39*(words/sentences)+11.8*(syllables/words)-15.59;
+    fb.textContent="Estimated reading level: Grade "+grade.toFixed(1)+" (Flesch–Kincaid approximation).";
+  }
+
+  let timerInterval;
+  function startTimer(){
+    let time=600;
+    const display=document.getElementById('timer_display');
+    clearInterval(timerInterval);
+    timerInterval=setInterval(()=>{
+      const m=Math.floor(time/60),s=time%60;
+      display.textContent="Time remaining: "+m+":"+(s<10?"0"+s:s);
+      time--;
+      if(time<0){clearInterval(timerInterval);display.textContent="Sprint complete. Review and refine your writing."; }
+    },1000);
+  }
+
+  // REWRITE HINTS
+  function rewriteText(textId,feedbackId,style){
+    const ta=document.getElementById(textId),fb=document.getElementById(feedbackId);
+    if(!ta||!fb)return;
+    const text=ta.value.trim();
+    if(!text){fb.textContent='Write or paste text first.';return;}
+    fb.textContent="Suggested "+style+" rewrite (conceptual):\n\nUse your draft as a base and revise it with this lens:\n- clearer structure\n- more precise verbs\n- fewer fillers\n- audience-aware framing.\n\nYou’re not trying to sound like someone else—you’re upgrading your own voice.";
+  }
+  function rewriteTone(){
+    const ta=document.getElementById('tone_text'),fb=document.getElementById('tone_feedback'),style=document.getElementById('tone_style').value;
+    if(!ta||!fb)return;
+    const text=ta.value.trim();
+    if(!text){fb.textContent='Paste text first.';return;}
+    fb.textContent="Tone checklist for "+style+" writing:\n\n"+
+      (style==='formal'?"• Avoid slang and contractions.\n• Use precise, domain-appropriate vocabulary.\n• Keep sentences clear and logically structured.\n":
+      style==='executive'?"• Lead with impact and outcomes.\n• Keep details high-level unless they change a decision.\n• End with a clear ask or recommendation.\n":
+      style==='concise'?"• Remove repeated ideas.\n• Replace long phrases with shorter equivalents.\n• Keep one main idea per sentence.\n":
+      style==='technical'?"• Define key terms once.\n• State assumptions explicitly.\n• Use concrete examples and metrics.\n":
+      style==='persuasive'?"• Emphasize benefits and outcomes.\n• Address likely objections.\n• Include a confident call to action.\n":
+      style==='plain'?"• Use everyday language.\n• Avoid acronyms unless necessary.\n• Prefer short sentences and concrete examples.\n":
+      "• Speak from ownership: what you designed, shipped, and learned.\n• Connect technical work to business impact.\n• Show judgment, not just implementation.\n")+
+      "\nUse this checklist to manually revise your text.";
+  }
+
+  // EMAIL
+  function updateEmailTemplate(){
+    const type=document.getElementById('emailType').value;
+    const tone=document.getElementById('emailTone').value;
+    const subj=document.getElementById('emailSubject');
+    const greet=document.getElementById('emailGreeting').value||'Hi [Name],';
+    const sig=document.getElementById('emailSignature').value||'Best regards,\n[Your Name]';
+    let body='';
+    if(type==='intro'){
+      if(!subj.value)subj.value='Exploring Remote Prompt Engineer Opportunities';
+      body=greet+"\n\nI’m an AI practitioner with graduate training in education and applied artificial intelligence, currently focused on designing prompt strategies and evaluation frameworks for LLM-powered products. I’m especially interested in how your team is using generative AI to build user-centric experiences at scale.\n\nI’d welcome the chance to briefly connect and explore where my background in applied AI and instructional design could add value to your roadmap.\n\n"+sig;
+    }else if(type==='followup'){
+      if(!subj.value)subj.value='Thank you for the conversation';
+      body=greet+"\n\nThank you again for the opportunity to discuss the Prompt Engineer role. Our conversation reinforced my excitement about the team’s focus on evaluation frameworks, responsible AI, and cross-functional collaboration.\n\nIf there’s any additional context or examples I can share—particularly around my work in applied AI and education—please let me know.\n\n"+sig;
+    }else{
+      if(!subj.value)subj.value='Exploring AI & LLM Collaboration Opportunities';
+      body=greet+"\n\nI’m an AI Engineer with a background in education and applied artificial intelligence, and I’ve been following your work at the intersection of AI and product strategy. I’d love to learn more about your current initiatives and share how I’ve been applying LLMs to learning, knowledge management, and internal tooling.\n\nWould you be open to a brief 20-minute conversation over the next week?\n\n"+sig;
+    }
+    if(tone==='executive'){body=body.replace('I’d love','I would welcome').replace('brief','short');}
+    if(tone==='warm'){body=body.replace('I would welcome','I’d really appreciate');}
+    document.getElementById('emailPreview').textContent=body;
+  }
+  function copyEmail(){
+    const text=document.getElementById('emailPreview').textContent;
+    if(!text.trim()){alert('Generate an email first.');return;}
+    navigator.clipboard.writeText(text);
+    alert('Email copied to clipboard.');
+  }
+  function analyzeEmail(){
+    const text=document.getElementById('emailPreview').textContent;
+    const fb=document.getElementById('emailFeedback');
+    if(!text.trim()){fb.textContent='Generate an email first.';return;}
+    const words=text.split(/\s+/).length;
+    fb.textContent="Approx. "+words+" words.\nTone: professional and concise.\nConsider adding one concrete example of impact to strengthen credibility (e.g., “reduced onboarding time by 25%”).";
+  }
+
+  // RESUME
+  function updateResumeTemplate(){
+    const role=document.getElementById('resumeRole').value;
+    const level=document.getElementById('resumeLevel').value;
+    const box=document.getElementById('resumePreview');
+    let title='',bullets=[];
+    if(role==='prompt'){
+      title=(level==='senior'?'Senior Remote AI Prompt Engineer':'Remote AI Prompt Engineer');
+      bullets=[
+        'Designed and iterated prompts, system messages, and tool-calling strategies for LLM-powered features across multiple products.',
+        'Collaborated with PMs, designers, and engineers to translate user journeys into robust conversational flows.',
+        'Built and maintained evaluation frameworks to measure hallucination rate, task success, and user satisfaction.',
+        'Documented prompt patterns, failure modes, and best practices for cross-functional teams.'
+      ];
+    }else if(role==='ml'){
+      title=(level==='senior'?'Senior Machine Learning Engineer':'Machine Learning Engineer');
+      bullets=[
+        'Designed, trained, and deployed ML models for recommendation, ranking, or NLP use cases.',
+        'Implemented MLOps best practices, including CI/CD for models, feature stores, and monitoring.',
+        'Partnered with data engineering to ensure reliable, well-documented data pipelines.',
+        'Collaborated with stakeholders to define success metrics and run controlled experiments.'
+      ];
+    }else{
+      title=(level==='senior'?'Senior AI Engineer':'AI Engineer');
+      bullets=[
+        'Prototyped and productionized AI features using LLMs and traditional ML techniques.',
+        'Integrated AI services with existing microservices and front-end applications.',
+        'Established evaluation and observability practices for AI components.',
+        'Advised product and leadership on AI roadmap, trade-offs, and feasibility.'
+      ];
+    }
+    box.innerHTML="<strong>"+title+"</strong><br><br><strong>Professional Summary</strong><br><em>AI Engineer with graduate training in education and applied artificial intelligence, specializing in "+
+      (role==='prompt'?'prompt design, LLM evaluation, and user-centric GenAI experiences.':
+       role==='ml'?'end-to-end ML systems, MLOps, and experimentation at scale.':
+       'LLM applications, ML systems, and cross-functional AI delivery.')+
+      " Experienced collaborating with product, design, and engineering to ship production-grade AI features.</em><br><br><strong>Experience Highlights</strong><ul>"+bullets.map(b=>"<li>"+b+"</li>").join("")+"</ul>";
+  }
+
+  // SIMPLE EXPORT (text blob)
+  function exportTextPDF(textId){
+    const el=document.getElementById(textId);
+    if(!el){alert('Text area not found.');return;}
+    const text=el.value||el.innerText||el.textContent;
+    if(!text.trim()){alert('Nothing to export.');return;}
+    const blob=new Blob([text],{type:'text/plain'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;a.download='writing-export.txt';a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // CHALLENGES
+  const challengeSets={
+    ai:[
+      "Write a 200-word executive summary explaining why your company should adopt retrieval-augmented generation for internal search.",
+      "Describe a realistic failure mode of an LLM-powered assistant in production and how you would mitigate it.",
+      "Draft a one-page overview of an internal AI platform that standardizes prompt patterns, evaluation, and governance."
+    ],
+    ml:[
+      "Explain to a non-technical stakeholder why data drift matters for a recommendation model.",
+      "Write a postmortem for a model that silently degraded over three days before detection.",
+      "Describe how you would design an experiment to compare two ranking models."
+    ],
+    ethics:[
+      "Draft a memo to a Chief Legal Officer outlining privacy risks of call summarization with LLMs.",
+      "Explain how you would incorporate bias assessment into an LLM deployment pipeline.",
+      "Write a short policy for responsible use of generative AI in customer-facing products."
+    ],
+    comm:[
+      "Rewrite a dense technical paragraph so that a non-technical executive can understand it.",
+      "Write a 150-word status update about an AI project for a leadership audience.",
+      "Explain the concept of hallucination mitigation to a cross-functional team."
+    ],
+    product:[
+      "Draft a product requirement for an LLM-powered onboarding assistant for new employees.",
+      "Describe how you would prioritize AI features for an internal knowledge base.",
+      "Write a short pitch for an AI feature that reduces support ticket volume."
+    ],
+    leadership:[
+      "Write a message to your team about adopting AI tools while maintaining quality and accountability.",
+      "Describe how you would align stakeholders around an AI roadmap with competing priorities.",
+      "Draft a brief note to leadership about the risks of moving too slowly on AI adoption."
+    ],
+    education:[
+      "Propose a district-level AI initiative that supports teachers with lesson planning and formative assessment.",
+      "Explain how you would design an LLM-powered tutor that preserves academic integrity.",
+      "Write a short concept note on using AI to support differentiated learning in large classrooms."
+    ]
+  };
+  function generateChallenge(){
+    const cat=document.getElementById('challengeCategory').value;
+    const list=challengeSets[cat]||challengeSets.ai;
+    const text=list[Math.floor(Math.random()*list.length)];
+    const card=document.getElementById('challengeCard');
+    if(card)card.textContent=text;
+  }
+  function saveChallenge(){
+    const card=document.getElementById('challengeCard');
+    const status=document.getElementById('challengeStatus');
+    if(!card||!card.textContent.trim()){status.textContent='Generate a challenge first.';return;}
+    const saved=JSON.parse(localStorage.getItem('savedChallenges')||'[]');
+    saved.push({text:card.textContent,ts:Date.now()});
+    localStorage.setItem('savedChallenges',JSON.stringify(saved));
+    status.textContent='Challenge saved.';
+    renderSavedChallenges();
+    updateDashboard();
+  }
+  function renderSavedChallenges(){
+    const list=document.getElementById('savedChallenges');
+    if(!list)return;
+    const saved=JSON.parse(localStorage.getItem('savedChallenges')||'[]');
+    if(saved.length===0)list.textContent='No challenges saved yet.';
+    else list.innerHTML=saved.map(c=>"<div class='card-soft-sub mb-1'>• "+c.text+"</div>").join("");
+    const recent=document.getElementById('recentChallenges');
+    if(recent){
+      if(saved.length===0)recent.textContent="No challenges saved yet. Generate and save some on the Daily Challenges tab.";
+      else recent.innerHTML=saved.slice(-3).map(c=>"<div class='card-soft-sub mb-1'>• "+c.text+"</div>").join("");
+    }
+  }
+
+  // DASHBOARD METRICS
+  function updateDashboard(){
+    const streakDays=parseInt(localStorage.getItem('streakDays')||'0',10);
+    const weeklyWords=parseInt(localStorage.getItem('weeklyWords')||'0',10);
+    const prompts=parseInt(localStorage.getItem('promptsCompleted')||'0',10);
+    document.getElementById('streakBadge').textContent=streakDays+" day"+(streakDays===1?'':'s');
+    document.getElementById('streakNumber').textContent=streakDays;
+    document.getElementById('streakMessage').textContent=streakDays>0?"Nice work. Keep your streak going.":"Start your first streak today.";
+    document.getElementById('weeklyWords').textContent=weeklyWords;
+    document.getElementById('weeklyWordsMessage').textContent=weeklyWords>=2000?"You’ve hit a strong weekly volume.":"Aim for at least 2,000 words this week.";
+    document.getElementById('promptsCompleted').textContent=prompts;
+    document.getElementById('promptsBadge').textContent=prompts;
+  }
+  function incrementPrompt(){
+    const prompts=parseInt(localStorage.getItem('promptsCompleted')||'0',10)+1;
+    localStorage.setItem('promptsCompleted',prompts);
+    const today=new Date().toDateString();
+    const lastDay=localStorage.getItem('lastWriteDay');
+    let streak=parseInt(localStorage.getItem('streakDays')||'0',10);
+    if(lastDay!==today){streak+=1;localStorage.setItem('streakDays',streak);localStorage.setItem('lastWriteDay',today);}
+    updateDashboard();
+    alert('Nice—prompt marked complete!');
+  }
+
+  // SETTINGS
+  function saveGoals(){
+    const w=document.getElementById('goalWords').value||'0';
+    const p=document.getElementById('goalPrompts').value||'0';
+    localStorage.setItem('goalWords',w);
+    localStorage.setItem('goalPrompts',p);
+    document.getElementById('goalStatus').textContent='Goals saved.';
+  }
+  function resetProgress(){
+    localStorage.removeItem('streakDays');
+    localStorage.removeItem('weeklyWords');
+    localStorage.removeItem('promptsCompleted');
+    localStorage.removeItem('savedChallenges');
+    localStorage.removeItem('lastWriteDay');
+    document.getElementById('resetStatus').textContent='Progress reset for this browser.';
+    updateDashboard();
+    renderSavedChallenges();
+  }
+
+  // INIT
+  window.addEventListener('DOMContentLoaded',()=>{
+    updateResumeTemplate();
+    renderSavedChallenges();
+    updateDashboard();
+    document.getElementById('goalWords').value=localStorage.getItem('goalWords')||'';
+    document.getElementById('goalPrompts').value=localStorage.getItem('goalPrompts')||'';
+  });
+</script>
+</body>
+</html>
